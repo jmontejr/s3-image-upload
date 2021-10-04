@@ -1,17 +1,17 @@
-// import React, { useState } from 'react';
 import React from 'react';
+// import { useSelector } from 'react-redux';
 
-import { Upload } from '../../components';
+import { Upload, List } from '../../components';
 
 import { Wrapper } from './style';
 
 const Home = () => {
-  // const [inputValue, setInputValue] = useState('');
+  // const { files } = useSelector((state) => state.files);
 
   return (
     <Wrapper>
       <Upload></Upload>
-      {/* <List></List> */}
+      <List />
     </Wrapper>
   );
 }

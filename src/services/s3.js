@@ -12,9 +12,11 @@ AWS.config.update({
 const MY_BUCKET = new AWS.S3({
   params: { Bucket: S3_BUCKET },
   region: REGION,
+  signatureVersion: 'v4'
 });
 
 export {
+  REGION,
   S3_BUCKET,
   DESTINATION,
   MY_BUCKET

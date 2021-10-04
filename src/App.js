@@ -1,4 +1,6 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import Home from './pages/Home';
 
 import {GlobalStyle} from './styles/global';
@@ -7,10 +9,12 @@ import { ThemeProvider } from 'styled-components';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <Home />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Home />
+      </ThemeProvider>
+    </Provider>
   );
 }
 
