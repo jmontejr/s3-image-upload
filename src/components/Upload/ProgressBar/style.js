@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const Bar = styled.div`
   width: 100%;
-  min-width: 500px;
-  max-width: 500px;
-  height: 30px;
+  min-width: 300px;
+  max-width: 300px;
+  height: 25px;
   background: #e8e8e8;
   border-radius: 2px;
   padding: 2px;
@@ -13,6 +13,12 @@ export const Bar = styled.div`
   align-items: center;
   overflow: hidden;
   position: relative;
+
+  @media only screen and (min-width: 1200px) {
+    min-width: 500px;
+    max-width: 500px;
+    height: 30px;
+  }
 
   &:before {
     content: '';
@@ -35,6 +41,10 @@ export const Bar = styled.div`
     position: relative;
     z-index: 2;
     color: ${props => props.theme.colors.white};
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+
+    @media only screen and (min-width: 1200px) {
+      font-size: 0.9rem;
+    }
   }
 `;

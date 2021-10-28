@@ -5,9 +5,10 @@ import { S3_BUCKET, MY_BUCKET, DESTINATION, REGION } from '../../services/s3';
 import { setFiles } from "../../redux/modules/files/actions";
 
 import ProgressBar from './ProgressBar';
-import { Wrapper, Container, Button } from './style';
+import { Wrapper, Container, Button, Label } from './style';
+import imageFiles from '../../assets/images/files.svg';
 
-const UploadToS3 = () => {
+const UploadToS3 = ({ draggable = true }) => {
   const dispatch = useDispatch();
   const { files } = useSelector((state) => state.files);
   const [progress, setProgress] = useState(0);
@@ -23,7 +24,7 @@ const UploadToS3 = () => {
 
   const handleFileInput = (event) => {
     setProgress(0);
-    setSelectedFile(event.target.files);
+    setSelectedFile(event.target.files[0]);
   };
 
   const getByteSize = (number) => (number < 1024) && `${number} bytes`;
@@ -51,46 +52,42 @@ const UploadToS3 = () => {
     return contentTypes[extension];
   }
 
-  const uploadFile = (uploadFiles) => {
-    if (!uploadFiles) return null;
+  const uploadFile = (file) => {
+    if (!file) return null;
 
-    [...Array.from(uploadFiles)].forEach((file) => {
+    setProgress(0);
+    const pathName = `${ DESTINATION }/${ file.name }`;
 
-      setProgress(0);
-      const pathName = `${ DESTINATION }/${ file.name }`;
+    const params = {
+      ACL: 'public-read',
+      Body: file,
+      Bucket: S3_BUCKET,
+      Key: pathName,
+      ContentType: getContentType(file.name)
+    };
 
-      const params = {
-        ACL: 'public-read',
-        Body: file,
-        Bucket: S3_BUCKET,
-        Key: pathName,
-        ContentType: getContentType(file.name)
-      };
+    MY_BUCKET
+      .putObject(params)
+      .on('httpUploadProgress', event => {
+        setProgress(Math.round((event.loaded / event.total) * 100));
+      })
+      .send((err, data) => {
+        if (err) {
+          console.error(err);
+          return `Error on try send file: ${ err.message }`;
+        }
 
-      MY_BUCKET
-        .putObject(params)
-        .on('httpUploadProgress', event => {
-          setProgress(Math.round((event.loaded / event.total) * 100));
-        })
-        .send((err, data) => {
-          if (err) {
-            console.error(err);
-            return `Error on try send file: ${ err.message }`;
+        dispatch(setFiles([
+          ...files,
+          {
+            name: file.name,
+            link: `https://${ S3_BUCKET }.s3.${ REGION }.amazonaws.com/${ pathName }`,
+            size: returnFileSize(file.size),
+            type: getContentType(file.name)
           }
+        ]));
 
-          dispatch(setFiles([
-            ...files,
-            {
-              name: file.name,
-              link: `https://${ S3_BUCKET }.s3.${ REGION }.amazonaws.com/${ pathName }`,
-              size: returnFileSize(file.size),
-              type: getContentType(file.name)
-            }
-          ]));
-
-        });
-
-    });
+      });
 
     setSelectedFile(null);
   };
@@ -98,13 +95,21 @@ const UploadToS3 = () => {
   return (
     <Wrapper>
       <Container>
-        <input
-          type="file"
-          onChange={handleFileInput}
-          accept="image/png, image/jpeg, image/svg+xml, image/webp"
-          multiple
-          draggable
-        />
+        <Label htmlFor="uploader">
+          <img src={imageFiles} alt="" />
+          <span>Click or drop your files here</span>
+          <input
+            id="uploader"
+            type="file"
+            onChange={handleFileInput}
+            accept="image/png, image/jpeg, image/svg+xml, image/webp"
+            draggable
+          />
+          {!selectedFile ?
+            <p>No files selected</p> :
+            <p>{selectedFile && selectedFile?.name}</p>
+          }
+        </Label>
         <Button onClick={() => uploadFile(selectedFile)}>
           <span>Upload</span>
         </Button>
