@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { S3_BUCKET, MY_BUCKET, DESTINATION, REGION } from '../../services/s3';
 
-import { setFiles } from "../../redux/modules/files/actions";
+import { setFiles } from "../../store/modules/files/actions";
 
 import ProgressBar from './ProgressBar';
 import { Wrapper, Container, Button, Label } from './style';
