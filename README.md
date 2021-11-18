@@ -1,4 +1,10 @@
-# S3 Image Upload
+<h1 align="center">S3 Image Upload</h1>
+
+<p align="center">
+<a href="https://sonarcloud.io/dashboard?id=jmontejr_s3-image-upload">
+<img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=jmontejr_s3-image-upload&metric=alert_status">
+</a>
+</p>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
